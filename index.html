@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <script src="jquery-3.1.0.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+    </head>
+    <style>
+        html,
+        body {
+            padding:0;
+            margin:0;
+            width: 100%;
+            height: 100%;
+        }
+        body {
+            font-family: "Source Sans Pro","Helvetica Neue",Helvetica,Arial,sans-serif;
+            color:white;
+        }
+        #sideCont{
+            position:fixed;
+            z-index: 1000;
+        }
+        #btnContainer{
+            position:relative;
+            z-index: 1001;
+        }
+        #toggleBtn{
+            position:relative;
+            padding:15px;
+            background-color:rgba(0,0,0,0.4);
+            display: inline-block;
+            border-radius: 5px;
+            min-height: 50px;
+            min-width: 50px;
+            transition:background-color 0.2s;
+        }
+        #toggleBtn:hover{
+            background-color:rgba(0,0,0,0.7);
+        }
+        #toggleBtn.cancel{
+            position:absolute;
+            background-color:rgba(255,255,255,0.8);
+            transition:background-color 0.2s;
+        }
+        .btnLine{
+            margin:2px auto;
+            height:2px;
+            width:30px;
+            background-color:white;
+            padding:2px;
+        }
+        .btnLine.cancel{
+            background-color:black;
+        }
+        #btnL1{
+            position:static;
+            transition: transform 0.5s, top 0.5s, position 0.5s;
+            transform:rotate(0deg);
+        }
+        #btnL3{
+            position:static;
+            transition: transform 0.5s, top 0.5s, position 0.5s;
+            transform:rotate(0deg);
+        }
+        #btnL1.rotate1{
+            top:50%;
+            background-color:black;
+            position: absolute;
+            transition: transform 1s, top 1s, position 1s, background-color 1s;
+            transition-timing-function: ease;
+            transition-delay: 0s;
+            transform:rotate(45deg);
+        }
+        #btnL2.hidden{
+            visibility:hidden;
+            transition:visibility 0.1s;
+        }
+        #btnL3.rotate3{
+            top:50%;
+            background-color:black;
+            position: absolute;
+            transition: transform 1s, top 1s, position 1s, background-color 1s;
+            transition-timing-function: ease;
+            transition-delay: 0s;
+            transform:rotate(135deg);
+        }
+        #sidebar{
+            position:fixed;
+            background-color: #222;
+            color:white;
+            font-size: 1.5em;
+            top:0;
+            height:100%;
+            width:200px;
+            left:0;
+            margin-left:-200px;
+            overflow: hidden;
+            z-index: 1000;
+            transition: left 0.5s ease 0s;
+        }
+        #sidebar.active{
+            left:200px;
+            transition: left 0.5s ease 0s;
+        }
+        #sideNav{
+            position:absolute;
+            top:100px;
+            margin: 0px;
+            padding: 0px;
+            list-style: none;
+        }
+        .navLI{
+            width:200px;
+            margin:0px;
+            padding:10px;
+        }
+        .navLI:hover{
+            background-color:darkgray;
+        }
+        i{
+            margin:5px;
+        }
+        .navLinks, .navLinks:hover{
+            margin:5px;
+            text-decoration:none;
+            color:white;            
+        }
+        .navLinks:hover{
+            width:200px;
+        }
+        #introContainer{
+            text-align: center;
+            z-index: 900;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-left: -175px; 
+            margin-top: -100px;
+        }
+        #header{
+            font-family: "Source Sans Pro","Helvetica Neue",Helvetica,Arial,sans-serif;
+            color:white;
+            display: table;
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: url('siteImg/pine-forest.jpg') no-repeat fixed center center;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            background-size: cover;
+            -o-background-size: cover;
+            max-width: 100%;
+            overflow: hidden;
+        }
+        h1{
+            margin: 0;
+            padding: 0;
+            font-size: 5em;
+            font-weight: 700;
+        }
+        #cloudLeftA,#cloudLeftB,#cloudRightA,#cloudRightB{
+            height: 100%;
+            width: 600px;
+            position: absolute;
+            z-index:0;
+            background-repeat: no-repeat;
+            background-position: center bottom;
+            background-size: contain;
+            background-color: transparent;
+        }
+        #cloudLeftA,#cloudRightA{
+            background-image: url(siteImg/cloudleft.png);
+        }
+        #cloudLeftB,#cloudRightB{
+            background-image: url('siteImg/cloudright.png');
+        }
+        #cloudLeftA{
+            left: -600px;
+            opacity: 0.2;
+        }    
+        #cloudLeftB{
+            left:-700px;
+            opacity: 0.5;
+        }
+        #cloudRightA{
+            right: -500px;
+            opacity: 0.25;
+        }
+        #cloudRightB{
+            right:-600px;
+            opacity:0.45;
+        }
+        #cloudLeftA,#cloudLeftB,#cloudRightA, #cloudRightB{
+            animation-iteration-count:infinite;
+            animation-direction: alternate;
+            animation-timing-function:linear;
+        }
+        #cloudLeftA{
+            animation-delay:5s;
+            animation-duration:65s;
+            animation-name:cloudLA;
+        }
+        @keyframes cloudLA{
+            from{left:-600px;}
+            to{left:1100px;}
+        }
+        #cloudLeftB{
+            animation-delay:0s;
+            animation-duration:85s;
+            animation-name:cloudLB;
+        }
+        @keyframes cloudLB{
+            from{left:-600px;}
+            to{left:1000px;}
+        }
+        #cloudRightA{
+            animation-delay:5s;
+            animation-duration:75s;
+            animation-name:cloudRA;
+        }
+        @keyframes cloudRA{
+            from{right:-600px;}
+            to{right:1000px;}
+        }
+        #cloudRightB{
+            animation-delay:0s;
+            animation-duration:60s;
+            animation-name:cloudRB
+        }
+        @keyframes cloudRB{  
+            from{right:-700px;}
+            to{right:1150px;}
+        }
+        #about{
+            padding:50px 0;
+            background-color:black;
+            color:white;
+        }
+        #bioP{
+            padding:0px 10px;
+        }
+        .appear{
+            animation-duration: 2s;
+            animation-iteration-count: 1;
+            animation-timing-function:linear;
+            animation-name:fadingIn;
+            animation-fill-mode: forwards;
+        }
+        @keyframes fadingIn{
+            from{opacity: 0.001;} 
+            to{opacity: 1;}
+        }
+        .disappear{
+            animation-duration: 1s;
+            animation-iteration-count: 1;
+            animation-timing-function:linear;
+            animation-name:fadingOut;  
+            animation-fill-mode: forwards;
+        }
+        @keyframes fadingOut{
+            from{opacity:1;}
+            to{opacity:0.001;}
+        }
+        #projects{
+            padding:50px 10px;
+            background-color: white;
+            color:black;
+            text-align:right;
+        }
+        .projLink{
+            text-decoration: none;
+        }
+        footer {
+            background-color: gainsboro;
+            color:black;
+            padding: 100px 0;
+        }
+        p{
+            font-size: 1.15em;
+        }
+        
+    </style> 
+    <body>
+        <div id="sideCont">
+        <div id="btnContainer">
+            <div id="toggleBtn">
+                <div id="btnL1" class="btnLine"> </div>
+                <div id="btnL2" class="btnLine"> </div>
+                <div id="btnL3" class="btnLine"> </div>
+            </div>
+        </div>
+        <nav id="sidebar">
+            <ul id="sideNav">
+                <li class="navLI"><a href="#header" class="navLinks" onclick= $("#sidebar").toggleClass("active")><h2>ming yue.</h2></a></li>
+                <li class="navLI"><i class="glyphicon glyphicon-home"></i><a href="#header" class="navLinks" onclick= $("#sidebar").toggleClass("active")> Home</a></li>
+                <li class="navLI"><i class="glyphicon glyphicon-user"></i><a href="#about" class="navLinks" onclick= $("#sidebar").toggleClass("active")> About Me</a></li>
+                <li class="navLI"><i class="glyphicon glyphicon-folder-open"></i><a href="#projects" class="navLinks" onclick= $("#sidebar").toggleClass("active")> Projects</a></li>
+                <li class="navLI"><i class="glyphicon glyphicon-envelope"></i><a href="#contact" class="navLinks" onclick= $("#sidebar").toggleClass("active")> Contact Me</a></li>
+            </ul>
+        </nav>
+        </div>
+        
+        <header id="header">
+            <div id="introContainer">
+                <h1 id="myName">ming yue.</h1>
+                <p>Welcome to my site! It's a constant and perpetual work in progress</p>
+            </div>
+            <div id="cloudLeftA"></div>
+            <div id="cloudLeftB"></div>
+            <div id="cloudRightA"></div>
+            <div id="cloudRightB"></div>
+        </header>
+        
+        <section id="about">
+            <div id="bioP" class="disappear">
+                <h1>About Me: A Short Bio</h1>      
+                    <div class="container">
+                        <div class="row col-md-offset-1">
+                            <div class="col-md-3">
+                                <h2 style="color:black;"> .</h2>
+                                <img src="siteImg/portrait.jpg" style="width:100%;" class="img-circle"/>
+                            </div>
+                            <div class="col-md-8 wow fadeIn" data-wow-delay="0.2s">
+                                <br>
+                                <p> Hello, my name is Ming Albert Yue! I'm currently studying Civil and Environmental Engineering at UC Berkeley, with focuses on structural engineering and engineering project managment. I have a keen interest in coding , and have decided to learn and code on my own. On my own time, I am a major history buff, and am also interested in finance and economy on a macroeconomic scale. My dream one day would be to fully understand and accurately predict macroeconomic trends. <br><br>My first foray into programming was a few years back, with a class in Java programming and a MATLAB class. Only a few of my classes in CEE required programming, and even then it was in MATLAB, a somewhat niche derivative language (MATLAB, for those that are unfamiliar with it, is a matrix-based object oriented functional language primarily used for calculations). But the ability of MATLAB to analyze large amounts of data amazed me, and got me very interested in writing programs. From then on, I learned Javascript, JQuery, Bootstrap, other JS frameworks and libraries, and PHP/SQL on my own.  Of course, my skills still aren't perfect; they're a work in progress, just like this site that I've written. I'm always eager to learn, streamline, and simplify. Feel free to take a look around, and contact me for anything!
+                                </p>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="projects">
+            <div id="projContainer" class="disappear">
+            <div>
+                <h1 id="projHead">Some Projects</h1>
+                <p>Here are just some of the projects I've worked on so far. Some are completed, others are a work-in-progress. Feel free to look at the code for any of them, test them out, reuse them, or build on them. Keep in mind that these projects were written by me, and could have potential bugs that I haven't found or fixed. Most of the code is written in HTML, CSS, and Javascript. If you have any questions that the little(or no) documentation does not answer, don't hesitate to reach out and ask!</p>
+            </div>
+            <div class="container">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#proj1">Tic Tac Toe</a></li>
+                    <li><a data-toggle="tab" href="#proj2">Scroll and Appear</a></li>
+                    <li><a data-toggle="tab" href="#proj3">Sidebar Navigation</a></li>
+                    <li><a data-toggle="tab" href="#proj4">Color Changing Grids</a></li>
+                    <li><a data-toggle="tab" href="#proj5">Nomadic Tribes</a></li>
+                    <li><a data-toggle="tab" href="#proj6">Close-Knit Words</a></li>
+                    <li><a data-toggle="tab" href="#proj7">ASCII Poker Chip Stacker</a></li>
+                    <li><a data-toggle="tab" href="#proj8">Fading an Image, Left to Right</a></li>
+                    <li><a data-toggle="tab" href="#proj9">Javascript Tetris</a></li>
+                    <li><a data-toggle="tab" href="#proj10">Carmichael Function</a></li>
+                </ul>
+
+                <div class="tab-content">
+                    <div id="proj1" class="tab-pane fade in active">
+                        <h3><a href="siteFiles/ticTacToe.html" class="projLink">Tic Tac Toe</a></h3>
+                        <p>This is a Tic Tac Toe program written in Javascript. It is written to never lose to the player(or at least, that was the original intent). I had originally set out with the ambitious intent to write a basic AI of sorts, but quickly found myself out of my league. I instead fell to utilizing a magic square, something I had learned from Matlab programming. A magic square was a square composed of numbers that when added together horizontally, vertically, or diagonally in any direction, would sum to the same number. The program used a series of sum checks and if/else statements to determine the best possible move. Later, I had read about something called Minimax recursion that is typically used in these types of decision making games, which is something quite interesting that I might explore. If this script could even be considered an AI at all, it would probably be a rather dim one.</p>
+                    </div>
+                    <div id="proj2" class="tab-pane fade">
+                        <h3><a href="siteFiles/scrollAppear.html" class="projLink">Scroll and Appear</a></h3>
+                        <p>This is a animation written primarily in JQuery, utilizing some of the newer features of CSS3. It's utilized in this website itself! It allows to element to appear as they are scrolled to, and disappear as they are scrolled away from. If you decide to use this, take note to adjust to your own dimensions as you see fit!</p>
+                    </div>
+                    <div id="proj3" class="tab-pane fade">
+                        <h3><a href="siteFiles/sidebarWrapper.html" class="projLink">Sidebar Navigation</a></h3>
+                        <p>I created my own custom sidebar navigation panel, one that is vertical as opposed to horizontal. Many of these probably already exist and work better than mine, but I wanted to see if I could work one out on my own. It is primarily powered by JQuery and CSS3 transitions/tranformations</p>
+                    </div>
+                    <div id="proj4" class="tab-pane fade">
+                        <h3><a href="siteFiles/colorChangingGrids.html" class="projLink">Color Changing Grids</a></h3>
+                        <p>This was just a private little project, one of my first forays into Javascript coding. It is very ugly, and lacks in any sort of decoration. The exercise was done to help better my understanding of Javascript and HTML DOM. It was a problem posed to me by a friend: "Create a 4x4 colored grid, every 250 milliseconds have one grid randomly change color. Once it has changed color, that grid shall not change color for at least another 2 seconds". JQuery or CSS tricks were not allowed, only plain ol' Javascript. </p>
+                    </div>
+                    <div id="proj5" class="tab-pane fade">
+                        <h3>Nomadic Tribes of Central Asia</h3>
+                        <p>This is a non-programming related project, just something mostly of personal curiosity. This project is just my own documentation and collection of some of the nomadics tribes of the plains of Central Asia, such as the Jurchen, Khitan, Uighyurs, Manchus, etc. I was always curious about where certain tribes originated, how they came to power, how they fell, where they went after, who they became. This just lets me keep a track of that.</p>
+                    </div>
+                    <div id="proj6" class="tab-pane fade">
+                        <h3><a href="siteFiles/closeKnitWords.html" class="projLink">Close-Knit Words</a></h3>
+                        <p>This was a challenge I saw on the  Code Golf StackExchange site, that I decided to try. Code Golf, for those that are unfamiliar, is to solve a puzzle or a problem following golf rules(and thus using the least lines or bytes of code as possible). Solving puzzles on Code Golf is a fun hobby I do, though I'm not nearly skilled enough to golf all my code just yet. It's always mind-blowing to see some of the pros golf their codes in as less bytes as possible. I mainly used this challenge to practice nested loops (something I still felt fairly weak at) and insertion sort.</p>
+                    </div>
+                    <div id="proj7" class="tab-pane fade">
+                        <h3><a href="siteFiles/asciiPokerChips.html" class="projLink">ASCII Poker Chip Stacker</a></h3>
+                        <p>Another challenge from the Code Golf site, I used to practice selection sort and recursion (another thing I felt I needed more practice with).</p>
+                    </div>
+                    <div id="proj8" class="tab-pane fade">
+                        <h3><a href="siteFiles/fadeLtoR.html" class="projLink">Fading an Image, Left to Right</a></h3>
+                        <p>JQuery is amazing for certain animations to HTML elements. It of course includes its a built in fade function. However, a friend asked me if it was possible to fade an image from left to right. JQuery was somewhat lacking, so I decided to build my own fading function. It was written primarily in Javascript. The effect was done by setting the image as a background-image of a table element, then slowly changing the opacity of the table (and thus the image as well) column by column. Feel free to use it or change it, as you like.</p>
+                    </div>
+                    <div id="proj9" class="tab-pane fade">
+                        <h3><a href="siteFiles/tetrisFinal.html" class="projLink">Javascipt Tetris</a></h3>
+                        <p> This is a project still in the works. It's tetris, written purely in Javascript. I'm sure there's easier ways to do it in JQuery or another library, but I wanted to practice my Javascript coding. The game primarily uses a recursive setInterval timer function. It's far from done, and I'm still trying to figure many functionalities out! Feel free to look at the code and give me feedback/advice/criticism.</p>
+                    </div>
+                    <div id="proj10" class="tab-pane fade">
+                        <h3><a href="siteFiles/carmFunc.html" class="projLink">The Carmichael Function</a></h3>
+                        <p> This was another challenege I saw on Code Golf, to compute a inputted number's Carmichael Function. I learned a little about Euclidean algorithms when finding greatest common divisors and coprimes, as well as some number theory when actually finding the Carmichael function itself.</p>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </section>
+        
+        <footer id="contact" class="contact">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-10 col-sm-offset-1 text-center">
+                    <br><br>
+                    <h4><strong>Contact Me</strong>
+                    </h4>
+                    <p>Channing Way<br>Berkeley, CA 94720</p>
+                    <ul class="list-unstyled">
+                        <li><i class="fa fa-phone fa-fw"></i> (510) 426-2889</li>
+                        <li><i class="fa fa-envelope-o fa-fw"></i>  <a href="mailto:mingyuea@gmail.com">mingyuea@gmail.com</a>
+                        </li>
+                    </ul>
+                    <br>
+                </div>
+            </div>
+        </div>
+    </footer>
+        <script>
+            $(document).ready(function(){
+                $("#introContainer").addClass("appear");  //this dictates what happens to the navigation button when it is moused over and clicked on
+                $("#toggleBtn").mouseenter(function(){
+                    $(".btnLine").animate({margin:"4px auto"});
+                });
+                $("#toggleBtn").mouseleave(function(){
+                    $(".btnLine").animate({margin:"2px auto"});
+                });
+                $("#toggleBtn").click(function(){
+                    $("#sidebar").toggleClass("active");
+                    $("#btnL1").toggleClass("rotate1");
+                    $("#btnL2").toggleClass("hidden");
+                    $("#btnL3").toggleClass("rotate3");
+                    $("#toggleBtn").toggleClass("cancel");
+                });
+                
+                var abt=$("#about").offset();
+                var prj=$("#projects").offset();
+                var cnt=$("#contact").offset();
+                var viewport=$(window);
+                if((abt.top<=(viewport.scrollTop()+300))||((abt.top+$("#about").outerHeight()-175)>=viewport.scrollTop())){  //if the top if the window is 300px away from the top of the element, or if the bottom of the element is 175px away from the top of the window, the element appears by fading in. These two margins can be adjusted as seen fit.Else the element will fade out.
+                    $("#bioP").removeClass("disappear");
+                    $("#bioP").addClass("appear");
+                }
+                else{
+                    $("#bioP").removeClass("appear");
+                    $("#bioP").addClass("disappear");
+                };
+                
+                if((prj.top<=(viewport.scrollTop()+300))&&((prj.top+$("#projects").outerHeight()-175)>=viewport.scrollTop())){  
+                    $("#projContainer").removeClass("disappear");
+                    $("#projContainer").addClass("appear");
+                }
+                else{
+                    $("#projContainer").removeClass("appear");
+                    $("#projContainer").addClass("disappear");
+                };
+                
+                $(window).scroll(function(){  //this binds the disappearing and reappearing of the element to the scroll event, allowing the element to appear/disappear as it is scrolled to and away, respectively
+                    console.log(prj.top);
+                    console.log(viewport.scrollTop());
+                    if((abt.top<=(viewport.scrollTop()+200))&&((abt.top+$("#about").outerHeight()-175)>=viewport.scrollTop())){
+                        $("#bioP").removeClass("disappear");
+                        $("#bioP").addClass("appear");
+                    }
+                    else{
+                        $("#bioP").removeClass("appear");
+                        $("#bioP").addClass("disappear");
+                    };
+                    
+                    if((prj.top<=(viewport.scrollTop()+200))&&((prj.top+$("#projects").outerHeight()-175)>=viewport.scrollTop())){  
+                        $("#projContainer").removeClass("disappear");
+                        $("#projContainer").addClass("appear");
+                    }
+                    else{
+                        $("#projContainer").removeClass("appear");
+                        $("#projContainer").addClass("disappear");
+                    };
+                });
+            })
+        </script>
+    </body>
+</html>
